@@ -1,4 +1,4 @@
-##<font color =red> Is it possible to access the resources in other VPC, in same accout or differnt account/Region ??</font>
+## Is it possible to access the resources in other VPC, in same accout or differnt account/Region ??</font>
 
 ![Capture1](https://user-images.githubusercontent.com/28533352/121317539-05e99100-c928-11eb-9407-6467dd379036.PNG)
 
