@@ -36,11 +36,11 @@ It is one to one relation between 2 vpc
 
 ![corporate](https://user-images.githubusercontent.com/28533352/121324633-87442200-c92e-11eb-860d-3d9a38be32ae.PNG)
 
--case 3 
+- case 3 
 
 ![internetgateway](https://user-images.githubusercontent.com/28533352/121324777-ac389500-c92e-11eb-8cd8-17ad495f86de.PNG)
 
--case 4
+- case 4
 
 ![AMAZONS3](https://user-images.githubusercontent.com/28533352/121325079-ef930380-c92e-11eb-8bc5-532e4b0dda45.PNG)
 
