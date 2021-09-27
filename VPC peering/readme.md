@@ -49,3 +49,18 @@ It is one to one relation between 2 vpc
 ###Requirement
 
 ![{66BF8F95-80DB-442B-A29F-AC2EFDB48ACA}](https://user-images.githubusercontent.com/28533352/134889966-bcc8f5cf-d4a0-43bb-8d5a-e1b4a304a6fd.png)
+
+- VPCA = us-east-2
+- VPCB = ap-south-1
+- VPCC = us-east-1
+
+    VPC
+        - PublicSubnet 
+        - PrivateSubnet
+        - PublicRouteTable
+        - PrivateRouteTable
+        - InternetGateway
+    * CIDR should not overlap 
+
+
+- GatewayEndPoint is attached to the private RouteTable (VPC C) 
