@@ -1,0 +1,104 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: "instance will be launched in the Private sunbnet of VPCC "
+
+Parameters:
+  VPCCPrivatesubnetInstanceName:
+    Description: VPCC Private subnet Instance Name
+    Type: String
+
+  VPCCPrivatesubnetInstanceImageId:
+    Description: "VPCC Private Subnet Instance ImageId" 
+    Type: AWS::EC2::Image::Id
+    Default: "ami-00dfe2c7ce89a450b"
+
+  VPCCPrivatesubnetInstanceType:
+    Description: "please select instance type "
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t1.micro
+      - t2.nano
+      - t2.micro
+      - t2.small
+      - t2.medium
+      - t2.large
+      - t3.micro
+      - m1.small
+      - m1.medium
+      - m1.large
+      - m1.xlarge
+      - m2.xlarge
+      - m2.2xlarge
+      - m2.4xlarge
+      - m3.medium
+      - m3.large
+      - m3.xlarge
+      - m3.2xlarge
+      - m4.large
+      - m4.xlarge
+      - m4.2xlarge
+      - m4.4xlarge
+      - m4.10xlarge
+      - c1.medium
+      - c1.xlarge
+      - c3.large
+      - c3.xlarge
+      - c3.2xlarge
+      - c3.4xlarge
+      - c3.8xlarge
+      - c4.large
+      - c4.xlarge
+      - c4.2xlarge
+      - c4.4xlarge
+      - c4.8xlarge
+      - g2.2xlarge
+      - g2.8xlarge
+      - r3.large
+      - r3.xlarge
+      - r3.2xlarge
+      - r3.4xlarge
+      - r3.8xlarge
+      - i2.xlarge
+      - i2.2xlarge
+      - i2.4xlarge
+      - i2.8xlarge
+      - d2.xlarge
+      - d2.2xlarge
+      - d2.4xlarge
+      - d2.8xlarge
+      - hs1.8xlarge
+      - cr1.8xlarge
+      - cc2.8xlarge
+    ConstraintDescription: "select a valid instance type" # this is additional description 
+
+  VPCCKeyPair:
+    Description: "Select the keypair"
+    Type: AWS::EC2::KeyPair::KeyName
+
+Resources: 
+  VPCCPrivatesubnetInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs: 
+            DeleteOnTermination: true
+            Encrypted: false
+            VolumeSize: 8 
+            VolumeType: gp2
+      SubnetId: !ImportValue ValaxyVPCCPrivateSubnetID  
+      KeyName: !Ref VPCCKeyPair
+      InstanceType: !Ref VPCCPrivatesubnetInstanceType
+      Monitoring: false
+      SecurityGroupIds: 
+        - !ImportValue PrivateSubnetVPCCSecurityGroupID
+      ImageId: !Ref VPCCPrivatesubnetInstanceImageId
+      Tags:
+        - Key: Name
+          Value: !Ref VPCCPrivatesubnetInstanceName
+Outputs:
+  VPCCPrivateSubnetPrivateIp:
+    Description: private ip of the instance launched in Private subnet in VPCC
+    Value: !GetAtt VPCCPrivatesubnetInstance.PrivateIp
+    Export: 
+      Name: VPCCPrivateSubnetPrivateIp

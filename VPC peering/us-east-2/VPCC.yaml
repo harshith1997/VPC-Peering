@@ -1,0 +1,148 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: "Vpc > private subnet > public subnet > route tabel > IGW "
+Parameters: 
+  ValaxyVPCCCidrRange:
+    Description: "Enter the cidr range for ValaxyVPCC "
+    Type: String
+    Default: 10.2.0.0/16
+    AllowedPattern: '(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})'
+
+  ValaxyVPCCName:
+    Description: "enter the name for ValaxyVPCC"
+    Type: String
+    Default: ValaxyVPCC
+    
+  ValaxyVPCCPublicSubnetCidr:
+    Description: "Enter the cidr range for ValaxyVPCCPublicSubnet"
+    Type: String
+    Default: 10.2.0.0/24
+    AllowedPattern: '(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})'  
+
+  ValaxyVPCCPrivateSubnetCidr:
+    Description: "Enter the cidr range for ValaxyVPCCPrivateSubnet"
+    Type: String
+    Default: 10.2.1.0/24
+    AllowedPattern: '(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})'  
+
+
+
+Resources: 
+  ValaxyVPCC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref ValaxyVPCCCidrRange
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: !Ref ValaxyVPCCName
+
+  ValaxyVPCCPublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      MapPublicIpOnLaunch: yes
+      AvailabilityZone: !Select 
+        - 0
+        - !GetAZs 
+      VpcId: !Ref ValaxyVPCC
+      CidrBlock: !Ref ValaxyVPCCPublicSubnetCidr
+      Tags:
+        - Key: Name
+          Value: ValaxyVPCCPublicSubnet  
+
+  ValaxyVPCCPrivateSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select 
+        - 1
+        - !GetAZs
+      VpcId: !Ref ValaxyVPCC 
+      CidrBlock: !Ref ValaxyVPCCPrivateSubnetCidr
+      Tags:
+        - Key: Name
+          Value: ValaxyVPCCPrivateSubnet
+
+  ValaxyVPCCPublicSubnetRT:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref ValaxyVPCC 
+      Tags:
+        - Key: Name
+          Value: ValaxyVPCCPublicRT
+
+  ValaxyVPCCPublicRTASSoc:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref ValaxyVPCCPublicSubnet
+      RouteTableId: !Ref ValaxyVPCCPublicSubnetRT       
+
+
+  ValaxyVPCCPrivateSubnetRT:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref ValaxyVPCC 
+      Tags:
+        - Key: Name
+          Value: ValaxyVPCCPrivateSubnetRT
+
+  ValaxyVPCCPrivateSubnetRTASSoc:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref ValaxyVPCCPrivateSubnet
+      RouteTableId: !Ref ValaxyVPCCPrivateSubnetRT            
+
+  ValaxyVPCCIGW:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: ValaxyVPCCIGW
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref ValaxyVPCC
+      InternetGatewayId: !Ref ValaxyVPCCIGW
+
+  ValaxyVPCCIGWRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref ValaxyVPCCPublicSubnetRT
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref ValaxyVPCCIGW
+
+Outputs:
+  ValaxyVPCC:
+    Description: "ValaxyVPCC ID"
+    Value: !Ref ValaxyVPCC
+    Export: 
+      Name: ValaxyVPCCID
+
+  ValaxyVPCCPublicSubnet:
+    Description: "ValaxyVPCCPublicSubnet ID"
+    Value: !Ref ValaxyVPCCPublicSubnet
+    Export: 
+      Name: ValaxyVPCCPublicSubnetID
+
+  ValaxyVPCCPrivateSubnet:
+    Description: "ValaxyVPCCPrivateSubnet ID"
+    Value: !Ref ValaxyVPCCPrivateSubnet
+    Export: 
+      Name: ValaxyVPCCPrivateSubnetID
+
+  ValaxyVPCCPublicSubnetRT:
+    Description: "ValaxyVPCCPublicSubnetRT ID"
+    Value: !Ref ValaxyVPCCPublicSubnetRT
+    Export: 
+      Name: ValaxyVPCCPublicSubnetRTID
+
+  ValaxyVPCCPrivateSubnetRT:
+    Description: "ValaxyVPCCPrivateSubnetRT ID"
+    Value: !Ref ValaxyVPCCPrivateSubnetRT
+    Export: 
+      Name: ValaxyVPCCPrivateSubnetRTID
+
+  ValaxyVPCCIGW:
+    Description: "ValaxyVPCCIGW ID"
+    Value: !Ref ValaxyVPCCIGW
+    Export: 
+      Name: ValaxyVPCCIGWID

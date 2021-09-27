@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: " this will create a peering connection between 2 VPC"
+Parameters: 
+  PeeringVPCIDB:
+    Description: "please enter the vpc id of which u wanna peer"
+    Type: String
+  PeeringVPCIDC:
+    Description: "please enter the vpc id of sender"
+    Type: String  
+
+Resources: 
+  VPCPUSEast2Mumbai:
+    Type: AWS::EC2::VPCPeeringConnection
+    Properties: 
+      PeerRegion: ap-south-1
+      VpcId: !Ref PeeringVPCIDC
+      PeerVpcId: !Ref PeeringVPCIDB
+      
+
+Outputs:
+  VPCPUSEast2MumbaiID:
+    Description: ID of the peered VPC
+    Value: !Ref VPCPUSEast2Mumbai
+    Export: 
+      Name: VPCPUSEas2MumbaiID

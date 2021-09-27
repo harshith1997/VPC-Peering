@@ -1,0 +1,19 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: "creates the gateway endpoint from private subnet to s3"
+Resources: 
+  Gatewayendpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties: 
+      RouteTableIds:
+        - !ImportValue ValaxyVPCAPrivateSubnetRTID
+      VpcEndpointType: Gateway
+      VpcId: !ImportValue ValaxyVPCAID
+      ServiceName: !Sub "com.amazonaws.${AWS::Region}.s3"
+      PolicyDocument: "{\"Version\":\"2008-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":\"*\",\"Action\":\"*\",\"Resource\":\"*\"}]}"
+      
+Outputs:
+  GatewayendpointID:
+    Description: Information about the value
+    Value: !Ref Gatewayendpoint
+    Export: 
+      Name: GatewayendpointID

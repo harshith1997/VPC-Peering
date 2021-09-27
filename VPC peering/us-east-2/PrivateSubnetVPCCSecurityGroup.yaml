@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: "security group which allows to SSH"
+Parameters: 
+  PrivateSubnetVPCCSecurityGroupName:
+    Description: "Private Subnet VPCC Security Group"
+    Type: String
+    Default: "PrivateSubnetVPCCSecurityGroup"
+
+Resources: 
+  PrivateSubnetVPCCSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Ref PrivateSubnetVPCCSecurityGroupName
+      GroupDescription: "SSH available"
+      VpcId: !ImportValue ValaxyVPCCID
+      SecurityGroupIngress:
+      
+        - SourceSecurityGroupId: !ImportValue PublicSubnetVPCCSecurityGroupID
+          SourceSecurityGroupOwnerId: "720027242607"
+          FromPort: 22
+          IpProtocol: "tcp"
+          ToPort: 22
+
+      SecurityGroupEgress: 
+        - CidrIp: "0.0.0.0/0"
+          IpProtocol: "-1"
+
+Outputs:
+  PrivateSubnetVPCCSecurityGroupID:
+    Description: this will allow ssh
+    Value: !Ref PrivateSubnetVPCCSecurityGroup 
+    Export: 
+      Name: PrivateSubnetVPCCSecurityGroupID

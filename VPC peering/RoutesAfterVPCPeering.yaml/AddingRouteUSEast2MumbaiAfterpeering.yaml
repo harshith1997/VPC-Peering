@@ -1,0 +1,9 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: adding route to the route table (peering route)
+Resources: 
+  VPCRouteUseast1:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !ImportValue ValaxyVPCCPublicSubnetRTID
+      DestinationCidrBlock: 10.1.0.0/16
+      VpcPeeringConnectionId: !ImportValue VPCPuseast1apsouth1ID

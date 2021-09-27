@@ -1,0 +1,17 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: "This will create S3GatewayEndPoint for EC2 "
+
+Resources: 
+  EC2S3FullAccess:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: "/"
+      RoleName: "S3-FullAccessValaxy"
+      AssumeRolePolicyDocument: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"ec2.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}"
+      ManagedPolicyArns: 
+        - "arn:aws:iam::aws:policy/AmazonS3FullAccess"                          
+      Description: "Allows EC2 instances to call AWS S3 services on your behalf."
+      Tags: 
+        - Key: "Name"
+          Value: "S3-FullAccess-toEC2"
+  

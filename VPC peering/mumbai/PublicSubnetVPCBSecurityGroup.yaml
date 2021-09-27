@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: "security group which allows to SSH, HTTP, ICMP "
+Parameters: 
+  PublicSubnetVPCBSecurityGroupName:
+    Description: "Public Subnet VPCB Security Group"
+    Type: String
+    Default: "PublicSubnetVPCBSecurityGroup"
+
+Resources: 
+  PublicSubnetVPCBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Ref PublicSubnetVPCBSecurityGroupName
+      GroupDescription: "SSH and HTTP available"
+      VpcId: !ImportValue ValaxyVPCBID
+      SecurityGroupIngress:
+        - CidrIp: "0.0.0.0/0"
+          FromPort: 22
+          IpProtocol: "tcp"
+          ToPort: 22
+
+        - CidrIpv6: "::/0"
+          FromPort: 22
+          IpProtocol: "tcp"
+          ToPort: 22
+
+        - CidrIp: "0.0.0.0/0"
+          FromPort: 80
+          IpProtocol: "tcp"
+          ToPort: 80
+
+        - CidrIpv6: "::/0"
+          FromPort: 80
+          IpProtocol: "tcp"
+          ToPort: 80
+
+        - CidrIp: "0.0.0.0/0"
+          FromPort: -1
+          IpProtocol: "icmp"
+          ToPort: -1
+
+        - CidrIpv6: "::/0"
+          FromPort: 80
+          IpProtocol: "ICMP"
+          ToPort: 80  
+
+      SecurityGroupEgress: 
+        - CidrIp: "0.0.0.0/0"
+          IpProtocol: "-1"
+
+Outputs:
+  PublicSubnetVPCBSecurityGroupID:
+    Description: this will allow http icmp and ssh
+    Value: !Ref PublicSubnetVPCBSecurityGroup 
+    Export: 
+      Name: PublicSubnetVPCBSecurityGroupID
