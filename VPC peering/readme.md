@@ -64,3 +64,4 @@ It is one to one relation between 2 vpc
 
 
 - GatewayEndPoint is attached to the private RouteTable (VPC C) 
+- Created Role should be attached to the EC2 instance which is there in the private subnet to access S3
